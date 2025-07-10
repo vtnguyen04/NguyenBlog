@@ -1,23 +1,37 @@
 ---
-
+// Import các hàm và component cần thiết từ Astro và template
 import { getEntry, render } from "astro:content";
 import Markdown from "@components/misc/Markdown.astro";
-import I18nKey from "../i18n/i18nKey";
-import { i18n } from "../i18n/translation";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
 
-const aboutPost = await getEntry("spec", "about");
+// ĐIỀU CHỈNH LẠI ĐÂY: Lấy nội dung từ collection 'posts' và file có slug là 'about-me'
+// Điều này tương ứng với file bạn đã tạo tại: src/content/posts/about-me.md
+const aboutPost = await getEntry("posts", "about-me");
 
+// Cập nhật lại thông báo lỗi cho rõ ràng
 if (!aboutPost) {
-	throw new Error("About page content not found");
+	throw new Error(
+		"Could not find the 'about-me.md' file in 'src/content/posts/'. Please create it first.",
+	);
 }
 
+// Render nội dung Markdown thành một component có thể hiển thị
 const { Content } = await render(aboutPost);
 ---
-<MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
+
+<!-- 
+    ĐƠN GIẢN HÓA: Thay vì dùng hệ thống đa ngôn ngữ (i18n), 
+    chúng ta điền trực tiếp title và description.
+    Điều này tốt hơn cho một trang cá nhân đơn ngữ và giúp tối ưu SEO.
+-->
+<MainGridLayout
+    title="About Me | Võ Thành Nguyễn"
+    description="Learn more about Võ Thành Nguyễn, an AI Engineer and Competitive Programmer from Vietnam."
+>
     <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
         <div class="card-base z-10 px-9 py-6 relative w-full ">
             <Markdown class="mt-2">
+                <!-- Nội dung từ file about-me.md của bạn sẽ được hiển thị ở đây -->
                 <Content />
             </Markdown>
         </div>
